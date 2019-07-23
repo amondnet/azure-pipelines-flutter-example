@@ -33,7 +33,7 @@ jobs:
         displayName: flutter doctor
 
       - script: |
-          cd helloworld
+          cd hello_world
           xcversion select 10.2.1 --symlink
           xcode-select --install
           sudo xcode-select --switch /Applications/Xcode_10.2.1.app/Contents/Developer
