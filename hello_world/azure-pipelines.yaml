@@ -44,10 +44,11 @@ jobs:
 
       - script: |
           $(FlutterToolPath)/flutter packages get
+          $(FlutterToolPath)/flutter build ios --release --no-codesign --target lib/main.dart
         # build_runner 를 사용할 경우
         # $(FlutterToolPath)/flutter packages pub run build_runner build --delete-conflicting-outputs
         # Flavor
         # $(FlutterToolPath)/flutter build ios --flavor development --release --no-codesign --target lib/main_dev.dart
-          $(FlutterToolPath)/flutter build ios --release --no-codesign --target lib/main.dart
+
         displayName: flutter build iOS
         timeoutInMinutes: 25
