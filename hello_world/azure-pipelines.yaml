@@ -1,0 +1,53 @@
+trigger:
+  branches:
+    include:
+      - develop
+      - release/*
+    exclude:
+      - release/android-*
+  paths:
+    exclude:
+      - README.md
+
+pr:
+  - develop
+
+jobs:
+  - job: iOS
+    pool:
+      vmimage: 'macos-latest'
+
+    steps:
+      # 특정 Version 사용
+      # - task: FlutterInstall@0
+      #  inputs:
+      #    channel: 'stable'
+      #    version: 'custom'
+      #    customVersion: '1.5.4-hotfix.2'
+      - task: FlutterInstall@0
+        inputs:
+          channel: 'stable'
+
+      - script: $(FlutterToolPath)/flutter doctor
+        displayName: flutter doctor
+
+      - script: |
+          xcversion select 10.2.1 --symlink
+          xcode-select --install
+          sudo xcode-select --switch /Applications/Xcode_10.2.1.app/Contents/Developer
+          brew install getsentry/tools/sentry-cli
+          cd ios
+          gem install bundler && bundle install
+          bundle exec fastlane install_plugins
+          cd ..
+        displayName: install fastlane
+
+      - script: |
+          $(FlutterToolPath)/flutter packages get
+        # build_runner 를 사용할 경우
+        # $(FlutterToolPath)/flutter packages pub run build_runner build --delete-conflicting-outputs
+        # Flavor
+        # $(FlutterToolPath)/flutter build ios --flavor development --release --no-codesign --target lib/main_dev.dart
+          $(FlutterToolPath)/flutter build ios --release --no-codesign --target lib/main.dart
+        displayName: flutter build iOS
+        timeoutInMinutes: 25
