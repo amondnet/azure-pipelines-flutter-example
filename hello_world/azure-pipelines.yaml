@@ -33,17 +33,19 @@ jobs:
         displayName: flutter doctor
 
       - script: |
+          cd helloworld
           xcversion select 10.2.1 --symlink
           xcode-select --install
           sudo xcode-select --switch /Applications/Xcode_10.2.1.app/Contents/Developer
-          brew install getsentry/tools/sentry-cli
-          cd ios
-          gem install bundler && bundle install
-          bundle exec fastlane install_plugins
-          cd ..
-        displayName: install fastlane
+        displayName: prepare xcode
+      #    brew install getsentry/tools/sentry-cli
+      #    gem install bundler && bundle install
+      #    bundle exec fastlane install_plugins
+      #    cd ..
+      #  displayName: install fastlane
 
       - script: |
+
           $(FlutterToolPath)/flutter packages get
           $(FlutterToolPath)/flutter build ios --release --no-codesign --target lib/main.dart
         # build_runner 를 사용할 경우
